@@ -1,0 +1,37 @@
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: podinfo-service-clusterip
+#  namespace: podinfo
+#spec:
+#  type: ClusterIP
+#  selector:
+#    app: podinfo
+#  ports:
+#    - name: http
+#      port: 80
+#      protocol: TCP
+#      targetPort: http
+#    - port: 9999
+#      targetPort: grpc
+#      protocol: TCP
+#      name: grpc
+#---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podinfo-service-lb
+  namespace: podinfo
+spec:
+  type: LoadBalancer
+  selector:
+    app: podinfo
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+    - port: 9999
+      targetPort: grpc
+      protocol: TCP
+      name: grpc

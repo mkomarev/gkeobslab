@@ -1,0 +1,40 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: locust-worker
+  namespace: locust
+  labels:
+    name: locust-worker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: locust-worker
+  template:
+    metadata:
+      labels:
+        app: locust-worker
+    spec:
+      volumes:
+      - name: locustfile
+        configMap:
+          name: locustfile-cm
+      containers:
+        - name: locust-worker
+          image: locustio/locust:latest
+          args: ["--worker", "--master-host=locust-master"]
+          volumeMounts:
+          - mountPath: /home/locust
+            name: locustfile          
+          env:
+            - name: LOCUST_MODE
+              value: worker
+            - name: LOCUST_MASTER
+              value: locust-master
+            - name: TARGET_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: env-cm
+                  key: LOAD_URL
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

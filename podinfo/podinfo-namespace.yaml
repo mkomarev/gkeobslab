@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: podinfo
+  labels:
+    # enable Istio proxy injection into the workloads for Cloud Service Mesh
+    istio-injection: enabled
